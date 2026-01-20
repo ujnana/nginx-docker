@@ -9,6 +9,7 @@ services:
         PHP_VERSION: ${PHP_VERSION:-8.1}
     volumes:
       - ./app:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/conf.d/custom.ini
     environment:
       - WORDPRESS_DB_HOST=db
       - WORDPRESS_DB_USER=${DB_USER}
