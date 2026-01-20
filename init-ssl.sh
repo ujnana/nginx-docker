@@ -31,15 +31,6 @@ if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/
   echo
 fi
 
-echo "### Updating nginx configuration for $domains ..."
-# Use a different delimiter and handle potential macOS vs Linux sed differences
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  sed -i '' "s|example.com|${domains[0]}|g" ./nginx/default.conf
-else
-  sed -i "s|example.com|${domains[0]}|g" ./nginx/default.conf
-fi
-echo
-
 echo "### Creating dummy certificate for $domains ..."
 path="/etc/letsencrypt/live/$domains"
 mkdir -p "$data_path/conf/live/$domains"
