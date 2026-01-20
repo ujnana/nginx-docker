@@ -21,7 +21,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
-      - wp_network
+      - bridge_default
 
   # Nginx Service
   nginx:
@@ -34,12 +34,15 @@ services:
       - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     depends_on:
       - php
     environment:
       - DOMAIN=${DOMAIN:-example.com}
     networks:
-      - wp_network
+      - bridge_default
 
   # Certbot Service
   certbot:
@@ -49,7 +52,7 @@ services:
       - ./certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     networks:
-      - wp_network
+      - bridge_default
 
   # Database Service
   db:
@@ -64,7 +67,7 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
     networks:
-      - wp_network
+      - bridge_default
 
   # phpMyAdmin Service
   phpmyadmin:
@@ -77,18 +80,19 @@ services:
     depends_on:
       - db
     networks:
-      - wp_network
+      - bridge_default
 
   # Redis Service
   redis:
     image: redis:alpine
     restart: always
     networks:
-      - wp_network
+      - bridge_default
 
 networks:
-  wp_network:
-    driver: bridge
+  bridge_default:
+    external: true
+    name: bridge_default
 
 volumes:
   db_data:
