@@ -5,6 +5,8 @@ FROM php:${PHP_VERSION}-fpm-alpine
 RUN apk add --no-cache \
     bash \
     curl \
+    ca-certificates \
+    openssl \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
@@ -15,7 +17,8 @@ RUN apk add --no-cache \
     make \
     autoconf \
     g++ \
-    pcre-dev
+    pcre-dev \
+    && update-ca-certificates
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
